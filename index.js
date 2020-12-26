@@ -133,7 +133,7 @@ ControlChromecastPlatform.prototype.addAccessory = function (device) {
         .setCharacteristic(Characteristic.Model, accessory.context.model)
         .setCharacteristic(Characteristic.SerialNumber, device.txtRecord.id);
 
-    accessory.addService(Service.TelevisionSpeaker, accessory.context.name);
+    accessory.addService(Service.Speaker, accessory.context.name);
 
     this.accessories[accessory.UUID] = new ChromecastAccessory(this.log, accessory, device);
 
@@ -200,7 +200,7 @@ ControlChromecastPlatform.prototype.configurationRequestHandler = function (cont
       context.canRemoveService = [];
       context.onScreenSelection = [];
 
-      var service = context.accessory.getService(Service.TelevisionSpeaker);
+      var service = context.accessory.getService(Service.Speaker);
       var characteristics, services;
 
       if (!/(650|Original)/.test(context.accessory.context.model)) {
@@ -308,7 +308,7 @@ ControlChromecastPlatform.prototype.configurationRequestHandler = function (cont
     case 'RemoveCharacteristic':
     case 'RemoveService':
       if (request.response.selections) {
-        var service = context.accessory.getService(Service.TelevisionSpeaker);
+        var service = context.accessory.getService(Service.Speaker);
 
         for (var i in request.response.selections.sort()) {
           let item = context[`can${context.onScreen}`][request.response.selections[i]];
@@ -544,7 +544,7 @@ function ChromecastAccessory(log, accessory, device) {
     this.accessory.context.name = this.accessory.displayName;
   }
 
-  let service = this.accessory.getService(Service.TelevisionSpeaker);
+  let service = this.accessory.getService(Service.Speaker);
 
   if (service.testCharacteristic(Characteristic.Name) === false) {
     service.addCharacteristic(Characteristic.Name);
@@ -896,8 +896,8 @@ ChromecastAccessory.prototype.addEventHandler = function (service, characteristi
 };
 
 ChromecastAccessory.prototype.addEventHandlers = function () {
-  this.addEventHandler(Service.TelevisionSpeaker, Characteristic.Active);
-  this.addEventHandler(Service.TelevisionSpeaker,Characteristic.Volume);
+  this.addEventHandler(Service.Speaker, Characteristic.Active);
+  this.addEventHandler(Service.Speaker,Characteristic.Volume);
 
   this.accessoryInformationService = new Service.AccessoryInformation();
   this.accessoryInformationService
