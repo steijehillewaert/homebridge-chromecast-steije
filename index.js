@@ -133,7 +133,7 @@ ControlChromecastPlatform.prototype.addAccessory = function (device) {
         .setCharacteristic(Characteristic.Model, accessory.context.model)
         .setCharacteristic(Characteristic.SerialNumber, device.txtRecord.id);
 
-    accessory.addService(Service.Speaker, accessory.context.name);
+    accessory.addService(Service.Lightbulb, accessory.context.name);
 
     this.accessories[accessory.UUID] = new ChromecastAccessory(this.log, accessory, device);
 
@@ -200,7 +200,7 @@ ControlChromecastPlatform.prototype.configurationRequestHandler = function (cont
       context.canRemoveService = [];
       context.onScreenSelection = [];
 
-      var service = context.accessory.getService(Service.Speaker);
+      var service = context.accessory.getService(Service.Lightbulb);
       var characteristics, services;
 
       if (!/(650|Original)/.test(context.accessory.context.model)) {
@@ -208,10 +208,10 @@ ControlChromecastPlatform.prototype.configurationRequestHandler = function (cont
       }
 
       if (context.accessory.context.features.color === true) {
-        characteristics = [Characteristic.Volume, ColorTemperature, Characteristic.Hue, Characteristic.Saturation];
+        characteristics = [Characteristic.Brightness, ColorTemperature, Characteristic.Hue, Characteristic.Saturation];
       }
       else {
-        characteristics = [Characteristic.Volume, ColorTemperature];
+        characteristics = [Characteristic.Brightness, ColorTemperature];
       }
 
       for (var index in characteristics) {
@@ -308,7 +308,7 @@ ControlChromecastPlatform.prototype.configurationRequestHandler = function (cont
     case 'RemoveCharacteristic':
     case 'RemoveService':
       if (request.response.selections) {
-        var service = context.accessory.getService(Service.Speaker);
+        var service = context.accessory.getService(Service.Lightbulb);
 
         for (var i in request.response.selections.sort()) {
           let item = context[`can${context.onScreen}`][request.response.selections[i]];
@@ -544,7 +544,7 @@ function ChromecastAccessory(log, accessory, device) {
     this.accessory.context.name = this.accessory.displayName;
   }
 
-  let service = this.accessory.getService(Service.Speaker);
+  let service = this.accessory.getService(Service.Lightbulb);
 
   if (service.testCharacteristic(Characteristic.Name) === false) {
     service.addCharacteristic(Characteristic.Name);
@@ -865,15 +865,15 @@ ChromecastAccessory.prototype.addEventHandler = function (service, characteristi
   }
 
   switch (characteristic) {
-    case Characteristic.Active:
+    case Characteristic.On:
       service
-        .getCharacteristic(Characteristic.Active)
+        .getCharacteristic(Characteristic.On)
         .on('get', this.isCasting.bind(this))
         .on('set', this.setCasting.bind(this));
       break;
-    case Characteristic.Volume:
+    case Characteristic.Brightness:
       service
-        .getCharacteristic(Characteristic.Volume)
+        .getCharacteristic(Characteristic.Brightness)
         .on('get', callback => callback(null, Math.floor(this.volume * 100)))
         .on('set', this.setVolume.bind(this));
       break;
@@ -896,8 +896,8 @@ ChromecastAccessory.prototype.addEventHandler = function (service, characteristi
 };
 
 ChromecastAccessory.prototype.addEventHandlers = function () {
-  this.addEventHandler(Service.Speaker, Characteristic.Active);
-  this.addEventHandler(Service.Speaker,Characteristic.Volume);
+  this.addEventHandler(Service.Lightbulb, Characteristic.On);
+  this.addEventHandler(Service.Lightbulb,Characteristic.Brightness);
 
   this.accessoryInformationService = new Service.AccessoryInformation();
   this.accessoryInformationService
