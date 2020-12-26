@@ -126,14 +126,14 @@ ControlChromecastPlatform.prototype.addAccessory = function (device) {
     accessory.context.name = device.txtRecord.fn;
     accessory.context.make = "Google";
     accessory.context.model = device.txtRecord.md || "Unknown";
-    accessory.context.features = { color: false, infrared: false, multizone: false };
+    accessory.context.features = { volume: false, mute: false };
 
     accessory.getService(Service.AccessoryInformation)
         .setCharacteristic(Characteristic.Manufacturer, accessory.context.make)
         .setCharacteristic(Characteristic.Model, accessory.context.model)
         .setCharacteristic(Characteristic.SerialNumber, device.txtRecord.id);
 
-    accessory.addService(Service.Speaker, accessory.context.name);
+    accessory.addService(Service.TelevisionSpeaker, accessory.context.name);
 
     this.accessories[accessory.UUID] = new ChromecastAccessory(this.log, accessory, device);
 
@@ -200,7 +200,7 @@ ControlChromecastPlatform.prototype.configurationRequestHandler = function (cont
       context.canRemoveService = [];
       context.onScreenSelection = [];
 
-      var service = context.accessory.getService(Service.Speaker);
+      var service = context.accessory.getService(Service.TelevisionSpeaker);
       var characteristics, services;
 
       for (var index in characteristics) {
@@ -297,7 +297,7 @@ ControlChromecastPlatform.prototype.configurationRequestHandler = function (cont
     case 'RemoveCharacteristic':
     case 'RemoveService':
       if (request.response.selections) {
-        var service = context.accessory.getService(Service.Speaker);
+        var service = context.accessory.getService(Service.TelevisionSpeaker);
 
         for (var i in request.response.selections.sort()) {
           let item = context[`can${context.onScreen}`][request.response.selections[i]];
@@ -533,7 +533,7 @@ function ChromecastAccessory(log, accessory, device) {
     this.accessory.context.name = this.accessory.displayName;
   }
 
-  let service = this.accessory.getService(Service.Speaker);
+  let service = this.accessory.getService(Service.TelevisionSpeaker);
 
   if (service.testCharacteristic(Characteristic.Name) === false) {
     service.addCharacteristic(Characteristic.Name);
@@ -885,8 +885,8 @@ ChromecastAccessory.prototype.addEventHandler = function (service, characteristi
 };
 
 ChromecastAccessory.prototype.addEventHandlers = function () {
-  this.addEventHandler(Service.Speaker, Characteristic.On);
-  this.addEventHandler(Service.Speaker,Characteristic.Volume);
+  this.addEventHandler(Service.TelevisionSpeaker, Characteristic.On);
+  this.addEventHandler(Service.TelevisionSpeaker,Characteristic.Volume);
 
   this.accessoryInformationService = new Service.AccessoryInformation();
   this.accessoryInformationService
