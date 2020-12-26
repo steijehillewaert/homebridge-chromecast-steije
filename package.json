@@ -1,15 +1,15 @@
 {
   "name": "homebridge-chromecast-steije",
-  "version": "1.3.1",
+  "version": "1.3.4",
   "description": "Expose Chromecast/Chromecast Audio devices in Homebridge to control them",
   "license": "ISC",
   "keywords": [
     "homebridge-plugin"
   ],
   "author": "Steije Hillewaert",
-  "repository": "git+https://github.com/yotamtal/homebridge-control-chromecast.git",
+  "repository": "git+https://github.com/steijehillewaert/homebridge-chromecast-steije.git",
   "bugs": {
-    "url": "https://github.com/yotamtal/homebridge-control-chromecast"
+    "url": "https://github.com/steijehillewaert/homebridge-chromecast-steije"
   },
   "engines": {
     "node": ">=8.0.0",
@@ -28,6 +28,6 @@
   "scripts": {
     "lint": "./node_modules/eslint/bin/eslint.js . --ext .js"
   },
-  "homepage": "https://github.com/yotamtal/homebridge-control-chromecast#readme",
+  "homepage": "https://github.com/steijehillewaert/homebridge-chromecast-steije#readme",
   "main": "index.js"
 }
